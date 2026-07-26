@@ -33,20 +33,29 @@ generator (or back to Claude), each endpoint can get its own typed tool.
 - Node.js ≥ 18 (uses the built-in `fetch`).
 - A Fanvue account with API access, and an OAuth application (below).
 
-## 1. Get an access token (one-time, in your browser)
+## 1. Get OAuth credentials (one-time, in your browser)
 
-The API uses OAuth 2.0 — there is no static API key. Follow the
-[Authentication guide](https://api.fanvue.com/docs/authentication/overview):
+The API uses OAuth 2.0 (issuer `https://auth.fanvue.com`) — there is no static API key. You
+need a **creator account with KYC completed** to access the Developer area.
 
-1. Register an OAuth application in your Fanvue developer settings. Note the **client ID**,
-   **client secret**, and set a **redirect URI** you control.
-2. Request the scopes you need. For the tools above: read scopes for insights/chats, and
-   `write:media` for `fanvue_grant_media`.
-3. Complete the authorization-code flow to obtain an **access token** (and refresh token).
-   A token from any OAuth client you trust works — the server only needs the access token.
+1. In the Fanvue Developer area, **register an app** to get a **client ID**, **client secret**,
+   and set a **redirect URI** you control.
+2. Select the **scopes** you need: read scopes for insights/chats, `write:media` for
+   `fanvue_grant_media`, and **`offline_access`** so you receive a **refresh token**.
+3. Complete the authorization-code flow once to obtain a **refresh token**. The quickest way is
+   the official [Fanvue App Starter](https://github.com/fanvue/fanvue-app-starter) (Next.js) —
+   run its "Login with Fanvue" flow, then read the refresh token from the session. Any OAuth
+   client you trust works.
 
-> Keep tokens secret. Never commit them. Access tokens expire — refresh and update the env
-> var when they do (a `401` from any tool means the token needs refreshing).
+This server supports two auth modes:
+
+- **Auto-refresh (recommended):** give it `FANVUE_OAUTH_CLIENT_ID`, `FANVUE_OAUTH_CLIENT_SECRET`
+  and `FANVUE_OAUTH_REFRESH_TOKEN`. It discovers the token endpoint via OIDC and mints fresh
+  access tokens automatically, including a one-shot refresh-and-retry on `401`.
+- **Static token:** give it `FANVUE_ACCESS_TOKEN`. Simpler, but it expires and you must update
+  it by hand.
+
+> Keep all secrets out of version control (`.env` is gitignored).
 
 ## 2. Install and build
 
@@ -63,9 +72,15 @@ cp .env.example .env
 # then edit .env and set FANVUE_ACCESS_TOKEN
 ```
 
+Provide **either** the OAuth trio (recommended) **or** a static token:
+
 | Variable | Required | Default | Purpose |
 | --- | --- | --- | --- |
-| `FANVUE_ACCESS_TOKEN` | ✅ | — | OAuth 2.0 access token. |
+| `FANVUE_OAUTH_CLIENT_ID` | OAuth mode | — | App client ID. |
+| `FANVUE_OAUTH_CLIENT_SECRET` | OAuth mode | — | App client secret. |
+| `FANVUE_OAUTH_REFRESH_TOKEN` | OAuth mode | — | Refresh token (needs `offline_access`). |
+| `FANVUE_OAUTH_ISSUER_BASE_URL` | | `https://auth.fanvue.com` | OAuth issuer for OIDC discovery. |
+| `FANVUE_ACCESS_TOKEN` | static mode | — | Static access token (used only if the OAuth trio isn't set). |
 | `FANVUE_API_VERSION` | | `2025-06-26` | Pin the API version. A `410` error tells you the next version. |
 | `FANVUE_BASE_URL` | | `https://api.fanvue.com` | Override the base URL. |
 
@@ -80,7 +95,9 @@ The server speaks MCP over **stdio**. Register it in your client's MCP config, f
       "command": "node",
       "args": ["/absolute/path/to/fanvue-mcp/dist/index.js"],
       "env": {
-        "FANVUE_ACCESS_TOKEN": "your-access-token",
+        "FANVUE_OAUTH_CLIENT_ID": "your-client-id",
+        "FANVUE_OAUTH_CLIENT_SECRET": "your-client-secret",
+        "FANVUE_OAUTH_REFRESH_TOKEN": "your-refresh-token",
         "FANVUE_API_VERSION": "2025-06-26"
       }
     }

@@ -16,22 +16,46 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { FanvueClient, FanvueApiError } from "./client.js";
+import { RefreshTokenProvider, StaticTokenProvider, type TokenProvider } from "./auth.js";
 
 const DEFAULT_API_VERSION = "2025-06-26";
+const DEFAULT_ISSUER = "https://auth.fanvue.com";
 
 let cachedClient: FanvueClient | undefined;
 
+/**
+ * Build a token provider from the environment. Prefers OAuth auto-refresh
+ * (client id/secret + refresh token) and falls back to a static access token.
+ */
+function buildTokenProvider(): TokenProvider {
+  const clientId = process.env.FANVUE_OAUTH_CLIENT_ID;
+  const clientSecret = process.env.FANVUE_OAUTH_CLIENT_SECRET;
+  const refreshToken = process.env.FANVUE_OAUTH_REFRESH_TOKEN;
+  if (clientId && clientSecret && refreshToken) {
+    return new RefreshTokenProvider({
+      issuerBaseUrl: process.env.FANVUE_OAUTH_ISSUER_BASE_URL || DEFAULT_ISSUER,
+      clientId,
+      clientSecret,
+      refreshToken,
+    });
+  }
+
+  const staticToken = process.env.FANVUE_ACCESS_TOKEN;
+  if (staticToken) {
+    return new StaticTokenProvider(staticToken);
+  }
+
+  throw new Error(
+    "No Fanvue credentials found. Set FANVUE_OAUTH_CLIENT_ID, FANVUE_OAUTH_CLIENT_SECRET and " +
+      "FANVUE_OAUTH_REFRESH_TOKEN for automatic token refresh (recommended), or FANVUE_ACCESS_TOKEN " +
+      "for a static access token. See the README for how to obtain these.",
+  );
+}
+
 function getClient(): FanvueClient {
   if (cachedClient) return cachedClient;
-  const token = process.env.FANVUE_ACCESS_TOKEN;
-  if (!token) {
-    throw new Error(
-      "FANVUE_ACCESS_TOKEN is not set. Obtain an access token via the Fanvue OAuth 2.0 flow " +
-        "(see README) and expose it to this server as an environment variable.",
-    );
-  }
   cachedClient = new FanvueClient({
-    token,
+    tokenProvider: buildTokenProvider(),
     apiVersion: process.env.FANVUE_API_VERSION || DEFAULT_API_VERSION,
     baseUrl: process.env.FANVUE_BASE_URL || undefined,
   });

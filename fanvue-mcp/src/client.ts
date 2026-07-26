@@ -13,9 +13,11 @@
  * (page style), so the agent decides how far to page.
  */
 
+import type { TokenProvider } from "./auth.js";
+
 export interface FanvueClientConfig {
-  /** Access token from the OAuth 2.0 flow. */
-  token: string;
+  /** Supplies (and refreshes) the OAuth 2.0 access token. */
+  tokenProvider: TokenProvider;
   /** Date-string API version, e.g. "2025-06-26". */
   apiVersion: string;
   /** Base URL. Defaults to https://api.fanvue.com. */
@@ -115,15 +117,15 @@ function statusHint(status: number, nextVersion?: string): string {
 }
 
 export class FanvueClient {
-  private readonly token: string;
+  private readonly tokenProvider: TokenProvider;
   private readonly apiVersion: string;
   private readonly baseUrl: string;
   private readonly maxRetries: number;
 
   constructor(config: FanvueClientConfig) {
-    if (!config.token) throw new Error("FanvueClient requires an access token.");
+    if (!config.tokenProvider) throw new Error("FanvueClient requires a tokenProvider.");
     if (!config.apiVersion) throw new Error("FanvueClient requires an apiVersion.");
-    this.token = config.token;
+    this.tokenProvider = config.tokenProvider;
     this.apiVersion = config.apiVersion;
     this.baseUrl = (config.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.maxRetries = config.maxRetries ?? 3;
@@ -137,23 +139,26 @@ export class FanvueClient {
     const normalizedPath = path.startsWith("/") ? path : `/${path}`;
     const url = `${this.baseUrl}${normalizedPath}${buildQueryString(options.query)}`;
 
-    const headers: Record<string, string> = {
-      Authorization: `Bearer ${this.token}`,
-      "X-Fanvue-API-Version": this.apiVersion,
-      Accept: "application/json",
-      ...options.headers,
-    };
-
     let payload: string | undefined;
     if (options.body !== undefined && method !== "GET" && method !== "HEAD") {
       payload = JSON.stringify(options.body);
-      headers["Content-Type"] = "application/json";
     }
 
     let attempt = 0;
-    // Retry loop for 429/502/503. Other errors throw immediately.
+    let refreshedAfter401 = false;
+    // Retry loop for 429/502/503 (and a single refresh-and-retry on 401).
+    // Other errors throw immediately.
     // eslint-disable-next-line no-constant-condition
     while (true) {
+      const token = await this.tokenProvider.getToken();
+      const headers: Record<string, string> = {
+        Authorization: `Bearer ${token}`,
+        "X-Fanvue-API-Version": this.apiVersion,
+        Accept: "application/json",
+        ...(payload !== undefined ? { "Content-Type": "application/json" } : {}),
+        ...options.headers,
+      };
+
       const response = await fetch(url, { method, headers, body: payload });
 
       if (response.ok) {
@@ -174,6 +179,13 @@ export class FanvueClient {
         parsed = raw ? JSON.parse(raw) : undefined;
       } catch {
         /* keep raw string */
+      }
+
+      // On 401, try a single token refresh (if the provider can) then retry once.
+      if (response.status === 401 && this.tokenProvider.canRefresh && !refreshedAfter401) {
+        refreshedAfter401 = true;
+        this.tokenProvider.invalidate();
+        continue;
       }
 
       if (RETRYABLE_STATUS.has(response.status) && attempt < this.maxRetries) {
