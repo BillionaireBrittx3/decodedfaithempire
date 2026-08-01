@@ -1,0 +1,254 @@
+{
+ "1": {
+  "open": "observation/modern",
+  "voice": "mentor",
+  "angle": "decision-making",
+  "posture": "trust"
+ },
+ "2": {
+  "open": "scenario",
+  "voice": "counselor",
+  "angle": "emotional-maturity",
+  "posture": "confession"
+ },
+ "3": {
+  "open": "story/anecdote",
+  "voice": "older-man",
+  "angle": "community/leadership",
+  "posture": "courage"
+ },
+ "4": {
+  "open": "question",
+  "voice": "pastor",
+  "angle": "grace/spiritual-formation",
+  "posture": "receiving-grace"
+ },
+ "5": {
+  "open": "observation",
+  "voice": "bible-teacher",
+  "angle": "identity",
+  "posture": "hope"
+ },
+ "6": {
+  "open": "behavior-science",
+  "voice": "counselor",
+  "angle": "emotional-maturity",
+  "posture": "self-examination"
+ },
+ "7": {
+  "open": "observation",
+  "voice": "pastor",
+  "angle": "habit/formation",
+  "posture": "dryness-to-hope"
+ },
+ "8": {
+  "open": "common-mistake",
+  "voice": "coach",
+  "angle": "habit-formation",
+  "posture": "mercy/fresh-start"
+ },
+ "9": {
+  "open": "scenario",
+  "voice": "father",
+  "angle": "repair",
+  "posture": "confession-hope"
+ },
+ "10": {
+  "open": "vignette",
+  "voice": "older-man",
+  "angle": "strength-redefined",
+  "posture": "surrender"
+ },
+ "11": {
+  "open": "observation",
+  "voice": "pastor",
+  "angle": "theology/grief",
+  "posture": "lament"
+ },
+ "12": {
+  "open": "surprising-observation",
+  "voice": "friend",
+  "angle": "interdependence",
+  "posture": "humility"
+ },
+ "13": {
+  "open": "modern-reflex",
+  "voice": "coach",
+  "angle": "attention/habit",
+  "posture": "invitation"
+ },
+ "14": {
+  "open": "scenario-after-failure",
+  "voice": "mentor",
+  "angle": "behavior/self-efficacy",
+  "posture": "renewed-trust"
+ },
+ "15": {
+  "open": "common-belief",
+  "voice": "pastor",
+  "angle": "grace",
+  "posture": "receiving-grace"
+ },
+ "16": {
+  "open": "question",
+  "voice": "counselor",
+  "angle": "decision/courage",
+  "posture": "courage"
+ },
+ "17": {
+  "open": "lament-observation",
+  "voice": "pastor",
+  "angle": "theology",
+  "posture": "lament-to-trust"
+ },
+ "18": {
+  "open": "false-title-image",
+  "voice": "counselor",
+  "angle": "boundaries",
+  "posture": "release"
+ },
+ "19": {
+  "open": "disproportionate-reaction",
+  "voice": "counselor",
+  "angle": "behavior/triggers",
+  "posture": "healing"
+ },
+ "20": {
+  "open": "observation-tired",
+  "voice": "friend",
+  "angle": "soul-rest",
+  "posture": "coming-to-rest"
+ },
+ "21": {
+  "open": "observation-blur",
+  "voice": "mentor",
+  "angle": "presence",
+  "posture": "awakening"
+ },
+ "22": {
+  "open": "fear-articulated",
+  "voice": "counselor",
+  "angle": "emotional-maturity",
+  "posture": "trust-safety"
+ },
+ "23": {
+  "open": "stuck-place",
+  "voice": "bible-teacher",
+  "angle": "grace/self-forgiveness",
+  "posture": "release"
+ },
+ "24": {
+  "open": "name-the-taboo",
+  "voice": "fellow-struggler",
+  "angle": "lament",
+  "posture": "lament-honest"
+ },
+ "25": {
+  "open": "rumination-scene",
+  "voice": "coach",
+  "angle": "behavior/decision",
+  "posture": "surrender-peace"
+ },
+ "26": {
+  "open": "impostor-secret",
+  "voice": "leader",
+  "angle": "identity/leadership",
+  "posture": "humility-security"
+ },
+ "27": {
+  "open": "image-fire",
+  "voice": "pastor",
+  "angle": "forgiveness",
+  "posture": "release"
+ },
+ "28": {
+  "open": "cost-benefit-image",
+  "voice": "counselor",
+  "angle": "intimacy",
+  "posture": "courage-be-seen"
+ },
+ "29": {
+  "open": "familiar-pull",
+  "voice": "coach",
+  "angle": "behavior/habit-loop",
+  "posture": "resolve/dependence"
+ },
+ "30": {
+  "open": "double-life-exhaustion",
+  "voice": "pastor",
+  "angle": "confession/integrity",
+  "posture": "relief"
+ },
+ "31": {
+  "open": "checkpoint-milestone",
+  "voice": "mentor-guide",
+  "angle": "consolidation/commitment",
+  "posture": "commitment"
+ },
+ "32": {
+  "open": "motivation-myth",
+  "voice": "coach",
+  "angle": "athletic-training",
+  "posture": "resolve"
+ },
+ "33": {
+  "open": "broken-self-promises",
+  "voice": "mentor",
+  "angle": "self-trust/integrity",
+  "posture": "commitment"
+ },
+ "34": {
+  "open": "hijacked-morning",
+  "voice": "practical-coach",
+  "angle": "intention/first-hour",
+  "posture": "seeking-God-first"
+ },
+ "35": {
+  "open": "attention-economy",
+  "voice": "teacher-prophetic",
+  "angle": "attention/formation",
+  "posture": "reclaiming"
+ },
+ "36": {
+  "open": "reframe-fear",
+  "voice": "counselor",
+  "angle": "emotional/perfectionism",
+  "posture": "courage"
+ },
+ "37": {
+  "open": "mood-dependent-man",
+  "voice": "mentor",
+  "angle": "consistency/floor",
+  "posture": "perseverance"
+ },
+ "38": {
+  "open": "environment-vs-willpower",
+  "voice": "coach",
+  "angle": "environment-design",
+  "posture": "wisdom-action"
+ },
+ "39": {
+  "open": "revenge-bedtime",
+  "voice": "pastoral-friend",
+  "angle": "rest-as-trust",
+  "posture": "surrender"
+ },
+ "40": {
+  "open": "plateau-misread",
+  "voice": "coach",
+  "angle": "compounding/perseverance",
+  "posture": "patience"
+ },
+ "41": {
+  "open": "two-ditches",
+  "voice": "teacher",
+  "angle": "stewardship/body",
+  "posture": "stewardship-worship"
+ },
+ "42": {
+  "open": "comfort-cage",
+  "voice": "mentor-coach",
+  "angle": "growth-through-discomfort",
+  "posture": "courage"
+ }
+}

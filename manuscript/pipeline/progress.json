@@ -1,0 +1,6 @@
+{
+ "next_devotion": 43,
+ "completed_through": 42,
+ "title_decision": "31&62 -> 'The Next Faithful Step' (option A; awaiting user override if any)",
+ "note": "Paused at user request after devotion 42. Resume: read progress.json, context.json[43:], write batch, python3 apply.py Man_rebuilt.docx, python3 render_pdf.py"
+}
